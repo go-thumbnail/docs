@@ -11,6 +11,18 @@ the cache interoperates with file managers and image viewers. Pure Go, `CGO_ENAB
 - Required PNG `tEXt` metadata (`Thumb::URI`, `Thumb::MTime`, …) written and validated.
 - Fail markers for sources that cannot be thumbnailed, and shared-repository handling.
 
+## Size limits
+
+A source file states its own dimensions: a 1×1 PNG whose header claims 16000×16000
+makes the standard decoder allocate about a gigabyte. Since v0.4.0 the default
+provider reads the header first and refuses a source above `MaxPixels` —
+**default 40 000 000 pixels** (`codec.DefaultMaxPixels`; a 50-megapixel photo is
+above it) — with an error wrapping `codec.ErrTooLarge`, before anything is
+allocated. Raise it with `thumbnail.WithMaxPixels(n)`, `Cache.MaxPixels`, or
+`FileProvider{MaxPixels: n}`. `MaxBytes` still bounds the file size. A cached
+thumbnail whose header claims more than its size bucket is treated as a miss and
+regenerated, never decoded.
+
 ## Install
 
 ```sh
