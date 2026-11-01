@@ -359,6 +359,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#size-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -415,6 +426,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#size-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -464,6 +486,16 @@ the cache interoperates with file managers and image viewers. Pure Go, <code>CGO
 <li>Required PNG <code>tEXt</code> metadata (<code>Thumb::URI</code>, <code>Thumb::MTime</code>, …) written and validated.</li>
 <li>Fail markers for sources that cannot be thumbnailed, and shared-repository handling.</li>
 </ul>
+<h2 id="size-limits">Size limits<a class="headerlink" href="#size-limits" title="Permanent link">&para;</a></h2>
+<p>A source file states its own dimensions: a 1×1 PNG whose header claims 16000×16000
+makes the standard decoder allocate about a gigabyte. Since v0.4.0 the default
+provider reads the header first and refuses a source above <code>MaxPixels</code> —
+<strong>default 40 000 000 pixels</strong> (<code>codec.DefaultMaxPixels</code>; a 50-megapixel photo is
+above it) — with an error wrapping <code>codec.ErrTooLarge</code>, before anything is
+allocated. Raise it with <code>thumbnail.WithMaxPixels(n)</code>, <code>Cache.MaxPixels</code>, or
+<code>FileProvider{MaxPixels: n}</code>. <code>MaxBytes</code> still bounds the file size. A cached
+thumbnail whose header claims more than its size bucket is treated as a miss and
+regenerated, never decoded.</p>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>go<span class="w"> </span>get<span class="w"> </span>github.com/go-thumbnail/thumbnail
 </code></pre></div>
